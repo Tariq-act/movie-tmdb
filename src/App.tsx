@@ -3,6 +3,7 @@ import Search from "./components/Search.tsx";
 import { useEffect, useState } from "react";
 import Spinner from "./components/Spinner.tsx";
 import MovieCard from "./components/MovieCard.tsx";
+import { useDebounce } from "react-use";
 
 export interface IMovie {
   adult: boolean;
@@ -45,13 +46,20 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [movieList, setMovieList] = useState<IMovie[] | []>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
 
-  const fetchMovies = async () => {
+  // Debounce the search term to prevent too many API requests
+  // by waiting for the user to stop typing for 500ms
+  useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
+
+  const fetchMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
 
     try {
-      const endPoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+      const endPoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
       const response = await fetch(endPoint, API_OPTIONS);
 
@@ -79,8 +87,8 @@ function App() {
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return (
     <main className={"overflow-hidden"}>
