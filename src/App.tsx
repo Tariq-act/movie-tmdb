@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./components/Spinner.tsx";
 import MovieCard from "./components/MovieCard.tsx";
 import { useDebounce } from "react-use";
+// import { updateSearchCount } from "./appwrite.ts";
 
 export interface IMovie {
   adult: boolean;
@@ -69,8 +70,6 @@ function App() {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data.Response === "False") {
         setErrorMessage(data.Error || "Failed to fetch movies");
         setMovieList([]);
@@ -78,6 +77,8 @@ function App() {
       }
 
       setMovieList(data.results || []);
+
+      // updateSearchCount();
     } catch (error) {
       console.log(`Error fetching movies: ${error}`);
       setErrorMessage("Error fetching movies. Please try again later");
