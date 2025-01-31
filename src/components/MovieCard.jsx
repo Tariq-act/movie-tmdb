@@ -1,9 +1,5 @@
-import { IMovie } from "../App.tsx";
-
 const MovieCard = ({
   movie: { title, vote_average, poster_path, release_date, original_language },
-}: {
-  movie: IMovie;
 }) => {
   return (
     <div className={"movie-card"}>

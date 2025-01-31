@@ -1,10 +1,4 @@
-const Search = ({
-  searchTerm,
-  setSearchTerm,
-}: {
-  searchTerm: any;
-  setSearchTerm: any;
-}) => {
+const Search = ({ searchTerm, setSearchTerm }) => {
   return (
     <div className={"search"}>
       <div>

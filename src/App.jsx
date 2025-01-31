@@ -1,34 +1,10 @@
 import "./App.css";
-import Search from "./components/Search.tsx";
+import Search from "./components/Search.jsx";
 import { useEffect, useState } from "react";
-import Spinner from "./components/Spinner.tsx";
-import MovieCard from "./components/MovieCard.tsx";
+import Spinner from "./components/Spinner.jsx";
+import MovieCard from "./components/MovieCard.jsx";
 import { useDebounce } from "react-use";
-// import { updateSearchCount } from "./appwrite.ts";
-
-export interface IMovie {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-// interface TMDBResponse {
-//   page: number;
-//   results: IMovie[];
-//   total_pages: number;
-//   total_results: number;
-// }
+import { updateSearchCount } from "./appwrite.js";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -43,11 +19,11 @@ const API_OPTIONS = {
 };
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [movieList, setMovieList] = useState<IMovie[] | []>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [movieList, setMovieList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   // Debounce the search term to prevent too many API requests
   // by waiting for the user to stop typing for 500ms
@@ -78,7 +54,9 @@ function App() {
 
       setMovieList(data.results || []);
 
-      // updateSearchCount();
+      if (query && data.results.length > 0) {
+        await updateSearchCount(query, data.results[0]);
+      }
     } catch (error) {
       console.log(`Error fetching movies: ${error}`);
       setErrorMessage("Error fetching movies. Please try again later");
@@ -113,7 +91,7 @@ function App() {
             <p className={"text-red-500"}>{errorMessage}</p>
           ) : (
             <ul>
-              {movieList.map((movie: IMovie) => (
+              {movieList.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
             </ul>
