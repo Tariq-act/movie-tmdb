@@ -1,7 +1,6 @@
 {
   "name": "movie-app",
   "homepage": "https://Tariq-act.github.io/movie-tmdb/",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
