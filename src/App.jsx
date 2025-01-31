@@ -19,8 +19,6 @@ const API_OPTIONS = {
 };
 
 function App() {
-  console.log(API_BASE_URL);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
